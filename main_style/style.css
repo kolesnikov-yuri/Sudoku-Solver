@@ -40,6 +40,27 @@
     background-color: rgb(241, 246, 241);
 }
 
+.cluster :hover {
+    background-color: rgb(153, 158, 153); 
+}
+
+.clusterBg {
+    background-color: rgb(153, 158, 153); 
+}
+
+.cluster_elements {
+    display: none;
+}
+
+.value_cluster {
+    width: 48px;
+    height: 48px;
+    font-size: 36px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .element {
     width: 16px;
     height: 16px;
@@ -70,11 +91,12 @@
     display: flex;
     align-items: center;
     justify-content: center;
-}
-
-span {
     font-size: 44px;
 }
+
+/* span {
+    font-size: 44px;
+} */
 
 .button_start {
     width: 120px;
