@@ -40,7 +40,7 @@
     background-color: rgb(241, 246, 241);
 }
 
-.cluster :hover {
+.cluster:hover {
     background-color: rgb(153, 158, 153); 
 }
 
@@ -48,9 +48,9 @@
     background-color: rgb(153, 158, 153); 
 }
 
-.cluster_elements {
+/* .cluster_elements {
     display: none;
-}
+} */
 
 .value_cluster {
     width: 48px;
