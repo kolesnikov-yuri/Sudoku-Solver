@@ -182,13 +182,34 @@ window.addEventListener('DOMContentLoaded', () => {
         box8_1, box8_2, box8_3, box8_4, box8_5, box8_6, box8_7, box8_8, box8_9,
         box9_1, box9_2, box9_3, box9_4, box9_5, box9_6, box9_7, box9_8, box9_9
     ];
+
+    // console.log(allBoxs);
+
+    // allBoxs.forEach((item, i) => {
+    //     item = [1, 2, 3, 4, 5];
+    // });
+    // // for (let i = 0; i < allBoxs.length; i++) {
+    // //     allBoxs[i] = [1, 2, 3];
+    // // }
+    // // allBoxs[2].pop();
+    // console.log(allBoxs);
+
+    // for (let value of allBoxs) {
+    //     value.pop();
+    // }
+    // console.log(allBoxs);
+
+    // let aaa, bbb, ccc;
     
+    // let allElem = [aaa, bbb, ccc];
 
-    allBoxs.forEach((box) => {
-        box = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-    });
+    // let allElemMap = new Map();
 
-    console.log(box5_1);
+    // allElem.forEach((elem, i) => {
+    //     elem.set(i, [1, 2, 3]);
+    // });
+   
+    // console.log(allElemMap);
 //-------------------------------
 
     cluster.forEach((clr, i) => {
