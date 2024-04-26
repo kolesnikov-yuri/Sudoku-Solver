@@ -1,17 +1,21 @@
 * {
     font-family: 'Poppins', sans-serif;
     color: black;
-    font-size: 20px;
+    font-size: 10px;
     font-weight: 400;
     box-sizing: border-box;
     margin: 0;
     padding: 0;    
 }
 
+body {                 
+    display: flex;
+}
+                                     /* после прочтения сжечь */
 .main {
     padding-top: 28px;
     height: 700px;
-    max-width: 520px;
+    width: 520px;
     display: flex;
     flex-direction: column;
     background-color: rgb(236, 228, 216);
@@ -38,6 +42,13 @@
 .cluster {
     border: 1px solid rgba(5, 19, 126, 0.667);
     background-color: rgb(241, 246, 241);
+
+    /* width: 50px;
+    height: 50px;
+    font-size: 45px;
+    display: flex;
+    justify-content: center;
+    align-items: center; */
 }
 
 .cluster:hover {
@@ -53,9 +64,9 @@
 } */
 
 .value_cluster {
-    width: 48px;
-    height: 48px;
-    font-size: 36px;
+    width: 50px;
+    height: 50px;
+    font-size: 40px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -92,6 +103,7 @@
     align-items: center;
     justify-content: center;
     font-size: 44px;
+    cursor: pointer;
 }
 
 /* span {
@@ -102,7 +114,7 @@
     width: 120px;
     height: 40px;
     margin: 0 auto;
-    /* border: 1px solid red; */
+    border: 3px solid rgba(3, 73, 3, 0.146);
     background-color: aqua; 
     display: flex;
     align-items: center;
@@ -110,4 +122,24 @@
     font-size: 30px;
     color: green;
     border-radius: 20px;
+    cursor: pointer;
+    text-transform: uppercase;
 }
+
+.button_start:hover {
+    background-color: rgba(0, 191, 255, 0.987);
+}
+                                     /* после прочтения сжечь */
+/* .btnStart {
+    width: 120px;
+    height: 40px;
+    margin: 0 auto;
+    border: 1px solid red; 
+    background-color: aqua; 
+    display: flex;
+    align-items: center;
+    justify-content: center; 
+    font-size: 30px;
+    color: green;
+    border-radius: 20px;
+} */

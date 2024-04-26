@@ -1,110 +1,186 @@
 window.addEventListener('DOMContentLoaded', () => {
 
-    const numContent = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
-    const btnsParent = document.querySelector('.buttons');
-    const cluster = document.querySelectorAll('.cluster');
-    const btns = document.querySelectorAll('.button');
-    let index;
+//-----------------Matrix start-----------------------------------
 
-//-------------------------------
+const matrix = [];
+for(let i = 0; i < 81; i++) {
+    matrix.push([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+}
 
-    const   zero  = 0,
-            one   = 1,
-            two   = 2,
-            three = 3,
-            four  = 4,
-            five  = 5,
-            six   = 6,
-            seven = 7,
-            eight = 8,
-            nine  = 9;
-
-    const clusterNum = {
-        a: zero,
-        b: one,
-        c: two,
-        d: three,
-        e: four,
-        f: five,
-        g: six,
-        h: seven,
-        i: eight,
-        j: nine
-    };
-
-    
-
-    function aaaBbb() {
-        cluster[0].innerHTML = `
-        <div class="cluster_elements">
-            <div class="row row_elements row_elements_1">
-                <div class="element element_1">
-                    <p class="element_value element_value_1">${clusterNum.b}</p>
-                </div>
-                <div class="element element_2">
-                    <p class="element_value element_value_2">${clusterNum.c}</p>
-                </div>
-                <div class="element element_3">
-                    <p class="element_value element_value_3">${clusterNum.d}</p>
-                </div>
-            </div>
-            <div class="row row_elements row_elements_2">
-                <div class="element element_4">
-                    <p class="element_value element_value_4">${clusterNum.e}</p>
-                </div>
-                <div class="element element_5">
-                    <p class="element_value element_value_5">${clusterNum.f}</p>
-                </div>
-                <div class="element element_6">
-                    <p class="element_value element_value_6">${clusterNum.g}</p>
-                </div>
-            </div>
-            <div class="row row_elements row_elements_3">
-                <div class="element element_7">
-                    <p class="element_value element_value_7">${clusterNum.h}</p>
-                </div>
-                <div class="element element_8">
-                    <p class="element_value element_value_8">${clusterNum.i}</p>
-                </div>
-                <div class="element element_9">
-                    <p class="element_value element_value_9">${clusterNum.j}</p>
-                </div>
-            </div>
-        </div>
-        `;
+const listElements = [];
+for(let i = 0; i < 81; i++) {
+    listElements.push([]);
+}
+let aaa = 0;
+for( let i = 0; i < 81; i++) {   
+    for( let key = 0; key < 9; key++) {
+        listElements[i].push(aaa);
+        aaa++;
     }
+}
 
-    aaaBbb();
+//-----------------Matrix end-----------------------------------
 
+//-----------------Creat elemets----------------------------------- 
 
+const body = document.querySelector('body');
+const main = document.createElement('div');
+main.classList.add('main');
+body.prepend(main);
 
+const field = document.createElement('div');
+field.classList.add('field');
+main.append(field);
 
-            
+const row = "row";
+addBlocks(field, 3, row);
+const rows = document.querySelectorAll('.row');
 
-    cluster.forEach((clr, i) => {
-        clr.addEventListener('click', () => {
-            index = i;
-            reverClusterBg();
-            pourClusterBg(i);
-        });
-       
+const sector = "sector";
+inEveryAddThreeBlocks(rows, sector);
+const sectors = document.querySelectorAll('.sector');
+
+const row_cluster = "row_cluster";
+inEveryAddThreeBlocks(sectors, row_cluster);
+const row_clusters = document.querySelectorAll('.row_cluster');
+addClassToEveryone(row_clusters, row);
+
+const cluster = "cluster";
+inEveryAddThreeBlocks(row_clusters, cluster);
+const clusters = document.querySelectorAll('.cluster');
+
+const row_element = "row_element";
+inEveryAddThreeBlocks(clusters, row_element);
+const allRows_elements = document.querySelectorAll('.row_element');
+addClassToEveryone(allRows_elements, row);
+
+const element = "element";
+inEveryAddThreeBlocks(allRows_elements, element);
+const elements = document.querySelectorAll('.element');
+
+const classButtons = "buttons";
+addBlocks(main, 1, classButtons);
+const btnsParent = document.querySelector('.buttons');
+
+const button = "button";
+addBlocks(btnsParent, 10, button);
+const btns = document.querySelectorAll('.button');
+
+const buttonStart = "button_start";
+addBlocks(main, 1, buttonStart);
+const START = document.querySelector('.button_start');
+START.textContent = 'start';
+
+btns.forEach((item, i) => {
+    item.textContent = i;
+});
+
+rebootingMatrix();
+
+//------------------
+
+function addClassToEveryone(what, ename) {
+    what.forEach(item => {
+        item.classList.add(`${ename}`);
     });
+}
 
-    function reverClusterBg() {
-        cluster.forEach(clr => {
-        clr.classList.remove('clusterBg');
-       }); 
+function inEveryAddThreeBlocks(where, ename) {
+    where.forEach(item => {
+        addBlocks(item, 3, ename);
+    });
+}
+
+function addBlocks(where, quan, ename) {
+    for(let i = 0; i < quan; i++) {
+        where.insertAdjacentHTML("beforeend", `<div class="${ename}"></div>`);
     }
+}
 
-    function pourClusterBg(i) {
-        cluster[i].classList.add('clusterBg'); 
-    }   
-
-    function showCluster(k) {
-        cluster[index].innerHTML = `${numContent[k]}`;
-        cluster[index].style.cssText = 'width: 50px; height: 50px; font-size: 45px; display: flex; justify-content: center; align-items: center;';
-        
+function addingValueElements(arr, num) {
+    for(let i = 0; i < arr.length; i++) {
+        switch(arr[i]) {
+            case 1:
+                elements[num[0]].textContent = 1;
+                break;
+            case 2:
+                elements[num[1]].textContent = 2;
+                break;
+            case 3:
+                elements[num[2]].textContent = 3;
+                break;
+            case 4:
+                elements[num[3]].textContent = 4;
+                break;
+            case 5:
+                elements[num[4]].textContent = 5;
+                break;
+            case 6:
+                elements[num[5]].textContent = 6;
+                break;
+            case 7:
+                elements[num[6]].textContent = 7;
+                break;
+            case 8:
+                elements[num[7]].textContent = 8;
+                break;
+            case 9:
+                elements[num[8]].textContent = 9;
+                break;
+        } 
     }
+}
+
+function rebootingMatrix() {
+    for(let i = 0; i < matrix.length; i++) {
+        if(typeof matrix[i] == 'number') {
+            clusters[i].classList.add('value_cluster');            
+            clusters[i].innerHTML = matrix[i]; 
+        } else if(Array.isArray(matrix[i])) {
+            addingValueElements(matrix[i], listElements[i]);
+        } else {
+            alert("какая то ошибка");
+        }
+    }
+}
+
+function deleteElementValues() {////////////////////////////////////////////////////////
+    elements.forEach(item => {
+        item.textContent = '';
+    });
+}
+//----------------- end Creat elemets------------------------------------ 
+
+//-------------------Task declaration------------------------------------
+
+let index;
+
+clusters.forEach((clr, i) => {
+    clr.addEventListener('click', () => {
+        index = i;
+        reverClusterBg();
+        pourClusterBg(i);
+    });
+    
+});
+
+function reverClusterBg() {
+    clusters.forEach(clr => {
+    clr.classList.remove('clusterBg');
+    }); 
+}
+
+function pourClusterBg(i) {
+    clusters[i].classList.add('clusterBg'); 
+}   
+
+function showCluster(k) {
+    matrix.splice(index, 1, k);
+    deleteElementValues();
+    rebootingMatrix();
+    clusters[index].style.cssText = 'width: 50px; height: 50px; font-size: 45px; display: flex; justify-content: center; align-items: center;';
+    
+}
 
     btnsParent.addEventListener('click', (event) => {
         const target = event.target;
@@ -118,8 +194,9 @@ window.addEventListener('DOMContentLoaded', () => {
             });               
         }
     });
-            
-});
+//----------------End Task declaration------------------------------------     
+
+ });
 
 
 
