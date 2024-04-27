@@ -11,14 +11,49 @@ const listElements = [];
 for(let i = 0; i < 81; i++) {
     listElements.push([]);
 }
-let aaa = 0;
+
+let numberIsInOrder = 0;
 for( let i = 0; i < 81; i++) {   
     for( let key = 0; key < 9; key++) {
-        listElements[i].push(aaa);
-        aaa++;
+        listElements[i].push(numberIsInOrder);
+        numberIsInOrder++;
     }
 }
 
+const sectorsMatrix = [];
+for(let i = 0; i < 9; i++) {
+    sectorsMatrix.push([]);
+}
+
+numberIsInOrder = 0;
+for( let i = 0; i < 9; i++) {   
+    for( let key = 0; key < 9; key++) {
+        sectorsMatrix[i].push(numberIsInOrder);
+        numberIsInOrder++;
+    }
+}
+
+const rowsMatrix = [];
+for(let i = 0; i < 9; i++) {
+    rowsMatrix.push([]);
+}
+
+for(let i = 0; i < 3; i++) {
+    let aaa = 0;
+    for(let key = 0; key < 3; key++) {
+        for(let a = 0; a < 3; a++) {
+            rowsMatrix[i].push(sectorsMatrix[key][a + aaa]);
+        }
+        aaa += 3; 
+    }
+}
+
+
+
+console.log(matrix);
+console.log(listElements);
+console.log(sectorsMatrix);
+console.log(rowsMatrix);
 //-----------------Matrix end-----------------------------------
 
 //-----------------Creat elemets----------------------------------- 
@@ -164,6 +199,19 @@ clusters.forEach((clr, i) => {
     
 });
 
+btnsParent.addEventListener('click', (event) => {
+    const target = event.target;
+
+    if (target && target.classList.contains('button')) {
+        btns.forEach((item, k) => {
+
+            if (target == item) {
+                checkingError(k);  
+            }               
+        });               
+    }
+});
+
 function reverClusterBg() {
     clusters.forEach(clr => {
     clr.classList.remove('clusterBg');
@@ -178,23 +226,39 @@ function showCluster(k) {
     matrix.splice(index, 1, k);
     deleteElementValues();
     rebootingMatrix();
-    clusters[index].style.cssText = 'width: 50px; height: 50px; font-size: 45px; display: flex; justify-content: center; align-items: center;';
-    
+    clusters[index].style.cssText = 'width: 50px; height: 50px; font-size: 45px; display: flex; justify-content: center; align-items: center;';    
 }
 
-    btnsParent.addEventListener('click', (event) => {
-        const target = event.target;
-
-        if (target && target.classList.contains('button')) {
-            btns.forEach((item, k) => {
-
-                if (target == item) {
-                    showCluster(k);  
-                }               
-            });               
+function checkingError(k) {
+    if(Array.isArray(matrix[index])) {
+        if(matrix[index].includes(k) == true) {
+            showCluster(k);
+        } else {
+            alert("Этого числа не может быть сдесь");
         }
-    });
-//----------------End Task declaration------------------------------------     
+    } else if(typeof matrix[index] == 'number') {
+        showCluster(k);
+    } else {
+        alert("ошибка почему то");
+    }
+}
+
+
+//----------------End Task declaration------------------------------------   
+
+//----------------Decision-------------------------------------------------
+
+START.addEventListener('click', () => {
+    console.log('start');
+    solvingProblem();
+});
+
+function solvingProblem() {
+
+}
+
+
+//----------------End decision-------------------------------------------------
 
  });
 
