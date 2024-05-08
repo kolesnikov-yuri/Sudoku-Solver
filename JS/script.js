@@ -2,58 +2,87 @@ window.addEventListener('DOMContentLoaded', () => {
 
 //-----------------Matrix start-----------------------------------
 
-const matrix = [];
+// Основной массив, задача - ответ
+let matrix = [];////////////////////////////////////////////let
 for(let i = 0; i < 81; i++) {
     matrix.push([1, 2, 3, 4, 5, 6, 7, 8, 9]);
 }
 
+// Запись ходов
+const recordingMoves = [];
+
+// Список элементов для отображения матрицы на экране
 const listElements = [];
-for(let i = 0; i < 81; i++) {
-    listElements.push([]);
-}
+createsListArray(listElements, 81);
 
-let numberIsInOrder = 0;
-for( let i = 0; i < 81; i++) {   
-    for( let key = 0; key < 9; key++) {
-        listElements[i].push(numberIsInOrder);
-        numberIsInOrder++;
-    }
-}
-
+// Секторы
 const sectorsMatrix = [];
-for(let i = 0; i < 9; i++) {
-    sectorsMatrix.push([]);
-}
+createsListArray(sectorsMatrix, 9);
 
-numberIsInOrder = 0;
-for( let i = 0; i < 9; i++) {   
-    for( let key = 0; key < 9; key++) {
-        sectorsMatrix[i].push(numberIsInOrder);
-        numberIsInOrder++;
-    }
-}
-
+// Ряды
 const rowsMatrix = [];
-for(let i = 0; i < 9; i++) {
-    rowsMatrix.push([]);
+createsAnArrayGroup(rowsMatrix, 9);
+let bbb = 0;
+let ccc = 0;
+let ddd = 0;
+for(let a = 0; a < 3; a++) {
+    for(let b = 0 + bbb; b < 3 + bbb; b++) {
+        for(let c = 0 + ccc; c < 3 + ccc; c++) {
+            for(let d = 0 + ddd; d < 3 + ddd; d++) {
+                rowsMatrix[b].push(sectorsMatrix[c][d]);  
+            }
+        }
+        ddd += 3;
+    }
+    bbb += 3;
+    ccc += 3;
+    ddd = 0;
 }
 
-for(let i = 0; i < 3; i++) {
-    let aaa = 0;
-    for(let key = 0; key < 3; key++) {
-        for(let a = 0; a < 3; a++) {
-            rowsMatrix[i].push(sectorsMatrix[key][a + aaa]);
+// Столбцы
+const colomnsMatrix = [];
+createsAnArrayGroup(colomnsMatrix, 9);
+bbb = 0;
+ccc = 0;
+ddd = 0;
+for(let a = 0; a < 3; a++) {
+    for(let b = 0 + bbb; b < 3 + bbb; b++) {
+        for(let c = 0 + ccc; c < 9; c += 3) {
+            for(let d = 0 + ddd; d < 9; d += 3) {
+                colomnsMatrix[b].push(sectorsMatrix[c][d]);  
+            }    
         }
-        aaa += 3; 
+        ddd += 1;
+    }
+    bbb += 3;
+    ccc += 1;
+    ddd = 0;
+}
+
+////////////////////////////////////////////////////////////////////////
+console.log("matrix", matrix);
+console.log("listElements", listElements);
+console.log("sectorsMatrix", sectorsMatrix);
+console.log("rowsMatrix", rowsMatrix);
+console.log("colomnsMatrix", colomnsMatrix);
+/////////////////////////////////////////////////////////////////////////
+
+function createsAnArrayGroup(item, e) {// Создает группу массивов
+    for(let i = 0; i < e; i++) {
+        item.push([]);
     }
 }
 
-
-
-console.log(matrix);
-console.log(listElements);
-console.log(sectorsMatrix);
-console.log(rowsMatrix);
+function createsListArray(item, e) {// Создает список в массиве
+    createsAnArrayGroup(item, e);
+    let numberIsInOrder = 0;
+    for( let i = 0; i < e; i++) {   
+        for( let key = 0; key < 9; key++) {
+            item[i].push(numberIsInOrder);
+            numberIsInOrder++;
+        }
+    }
+}
 //-----------------Matrix end-----------------------------------
 
 //-----------------Creat elemets----------------------------------- 
@@ -113,6 +142,7 @@ btns.forEach((item, i) => {
 rebootingMatrix();
 
 //------------------
+// Функции помогающие создать HTML
 
 function addClassToEveryone(what, ename) {
     what.forEach(item => {
@@ -132,7 +162,9 @@ function addBlocks(where, quan, ename) {
     }
 }
 
-function addingValueElements(arr, num) {
+//------------------
+
+function addingValueElements(arr, num) {// Встасляет значение элементов из матрицы
     for(let i = 0; i < arr.length; i++) {
         switch(arr[i]) {
             case 1:
@@ -166,7 +198,7 @@ function addingValueElements(arr, num) {
     }
 }
 
-function rebootingMatrix() {
+function rebootingMatrix() {// Перезагружает изображение матрицы
     for(let i = 0; i < matrix.length; i++) {
         if(typeof matrix[i] == 'number') {
             clusters[i].classList.add('value_cluster');            
@@ -179,7 +211,7 @@ function rebootingMatrix() {
     }
 }
 
-function deleteElementValues() {////////////////////////////////////////////////////////
+function deleteElementValues() {// Удаляет значение элементов
     elements.forEach(item => {
         item.textContent = '';
     });
@@ -188,9 +220,9 @@ function deleteElementValues() {////////////////////////////////////////////////
 
 //-------------------Task declaration------------------------------------
 
-let index;
+let index;// Курсор на поле
 
-clusters.forEach((clr, i) => {
+clusters.forEach((clr, i) => {// Курсор на поле
     clr.addEventListener('click', () => {
         index = i;
         reverClusterBg();
@@ -199,54 +231,102 @@ clusters.forEach((clr, i) => {
     
 });
 
-btnsParent.addEventListener('click', (event) => {
+btnsParent.addEventListener('click', (event) => {// Активные кнопки
     const target = event.target;
-
     if (target && target.classList.contains('button')) {
         btns.forEach((item, k) => {
-
             if (target == item) {
-                checkingError(k);  
+                if (k === 0) {
+                    cancelingLastAction();
+                } else {checkingError(k);}                  
             }               
         });               
     }
 });
 
-function reverClusterBg() {
+function reverClusterBg() {// Курсор на поле
     clusters.forEach(clr => {
     clr.classList.remove('clusterBg');
     }); 
 }
 
-function pourClusterBg(i) {
+function pourClusterBg(i) {// Курсор на поле
     clusters[i].classList.add('clusterBg'); 
 }   
 
-function showCluster(k) {
+function showCluster(k) {// Вставляет цифры в кластеры/////////////////////////////////////////////////////
+    aaaxxx();/////////////////////////////////////// 
     matrix.splice(index, 1, k);
     deleteElementValues();
-    rebootingMatrix();
-    clusters[index].style.cssText = 'width: 50px; height: 50px; font-size: 45px; display: flex; justify-content: center; align-items: center;';    
+    rebootingMatrix();    
 }
 
-function checkingError(k) {
+function checkingError(k) {// Проверяет возможность установки цифры в кластер
     if(Array.isArray(matrix[index])) {
-        if(matrix[index].includes(k) == true) {
-            showCluster(k);
+        if(matrix[index].includes(k)) {
+            removingNonStandardValues(k);
+            showCluster(k);         
         } else {
             alert("Этого числа не может быть сдесь");
         }
-    } else if(typeof matrix[index] == 'number') {
-        showCluster(k);
+    } else if(typeof matrix[index] == 'number') {////////////////////////////////////////////////////////////
+        alert('Если ошиблись, нажмите шаг назад "0" или начните заново');
     } else {
         alert("ошибка почему то");
     }
 }
 
+function cancelingLastAction() {// отменяем последнее действие
+    matrix = recordingMoves[0];
+    recordingMoves.shift();
+    rebootingMatrix();
+    console.log(matrix);
+}
 
 //----------------End Task declaration------------------------------------   
 
 //----------------Decision-------------------------------------------------
+
+// function removingNonStandardValues(k) {// Удаляет недопустимые элементы из матрицы
+//     let arr = [sectorsMatrix, rowsMatrix, colomnsMatrix];
+//     for(let b = 0; b < 3; b++) {
+//         for(let i = 0; i < arr[b].length; i++) {
+//             if(arr[b][i].includes(index)) {
+//                 for(let a = 0; a < arr[b][i].length; a++) {
+//                     if(Array.isArray(matrix[[arr[b][i][a]]])) {
+//                         if(matrix[arr[b][i][a]].includes(k)) {    
+//                             matrix[arr[b][i][a]].splice(matrix[arr[b][i][a]].indexOf(k), 1);
+//                         }
+//                     }
+//                 }
+//             }
+//         }
+//     }    
+// }
+function removingNonStandardValues(k) {// Удаляет недопустимые элементы из матрицы
+    let arr = [sectorsMatrix, rowsMatrix, colomnsMatrix];
+    arr.forEach(item => {
+        item.forEach(elem => {
+            if(elem.includes(index)) {
+                elem.forEach(e => {
+                    if(Array.isArray(matrix[[e]])) {
+                        if(matrix[e].includes(k)) {    
+                            matrix[e].splice(matrix[e].indexOf(k), 1);
+                        }
+                    }
+                });
+            }
+        });
+    });    
+}
+
+
+function aaaxxx() {
+    let clon;
+    clon = [...matrix];
+    recordingMoves.unshift(clon);
+}
+
 
 START.addEventListener('click', () => {
     console.log('start');
@@ -254,7 +334,9 @@ START.addEventListener('click', () => {
 });
 
 function solvingProblem() {
-
+    
+    
+    console.log(recordingMoves);
 }
 
 
