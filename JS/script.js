@@ -3,7 +3,7 @@ window.addEventListener('DOMContentLoaded', () => {
 //-----------------Matrix start-----------------------------------
 
 // Основной массив, задача - ответ
-let matrix = [];////////////////////////////////////////////let
+let matrix = [];
 for(let i = 0; i < 81; i++) {
     matrix.push([1, 2, 3, 4, 5, 6, 7, 8, 9]);
 }
@@ -11,9 +11,11 @@ for(let i = 0; i < 81; i++) {
 // Запись ходов
 const recordingMoves = [];
 
-// Список элементов для отображения матрицы на экране
-const listElements = [];
-createsListArray(listElements, 81);
+function recordStepInMemory() {// Записать шаг в память
+    let clon;
+    clon = JSON.parse(JSON.stringify(matrix));
+    recordingMoves.unshift(clon);
+}
 
 // Секторы
 const sectorsMatrix = [];
@@ -59,14 +61,6 @@ for(let a = 0; a < 3; a++) {
     ddd = 0;
 }
 
-////////////////////////////////////////////////////////////////////////
-console.log("matrix", matrix);
-console.log("listElements", listElements);
-console.log("sectorsMatrix", sectorsMatrix);
-console.log("rowsMatrix", rowsMatrix);
-console.log("colomnsMatrix", colomnsMatrix);
-/////////////////////////////////////////////////////////////////////////
-
 function createsAnArrayGroup(item, e) {// Создает группу массивов
     for(let i = 0; i < e; i++) {
         item.push([]);
@@ -88,7 +82,7 @@ function createsListArray(item, e) {// Создает список в масси
 //-----------------Creat elemets----------------------------------- 
 
 const body = document.querySelector('body');
-const main = document.createElement('div');
+const main = document.createElement('main');
 main.classList.add('main');
 body.prepend(main);
 
@@ -112,15 +106,6 @@ addClassToEveryone(row_clusters, row);
 const cluster = "cluster";
 inEveryAddThreeBlocks(row_clusters, cluster);
 const clusters = document.querySelectorAll('.cluster');
-
-const row_element = "row_element";
-inEveryAddThreeBlocks(clusters, row_element);
-const allRows_elements = document.querySelectorAll('.row_element');
-addClassToEveryone(allRows_elements, row);
-
-const element = "element";
-inEveryAddThreeBlocks(allRows_elements, element);
-const elements = document.querySelectorAll('.element');
 
 const classButtons = "buttons";
 addBlocks(main, 1, classButtons);
@@ -164,39 +149,17 @@ function addBlocks(where, quan, ename) {
 
 //------------------
 
-function addingValueElements(arr, num) {// Встасляет значение элементов из матрицы
-    for(let i = 0; i < arr.length; i++) {
-        switch(arr[i]) {
-            case 1:
-                elements[num[0]].textContent = 1;
-                break;
-            case 2:
-                elements[num[1]].textContent = 2;
-                break;
-            case 3:
-                elements[num[2]].textContent = 3;
-                break;
-            case 4:
-                elements[num[3]].textContent = 4;
-                break;
-            case 5:
-                elements[num[4]].textContent = 5;
-                break;
-            case 6:
-                elements[num[5]].textContent = 6;
-                break;
-            case 7:
-                elements[num[6]].textContent = 7;
-                break;
-            case 8:
-                elements[num[7]].textContent = 8;
-                break;
-            case 9:
-                elements[num[8]].textContent = 9;
-                break;
-        } 
-    }
+function addingValueElements(arr, num) {// Вставляет значение элементов из матрицы
+    let score = 0;
+    arr.forEach(item => {
+        for(let i = 1; i < item - score; i++) {
+            num.insertAdjacentHTML("beforeend", '<div class="element"></div>');
+        }
+        score = item;
+        num.insertAdjacentHTML("beforeend", `<div class="element">${item}</div>`);
+    });
 }
+
 
 function rebootingMatrix() {// Перезагружает изображение матрицы
     for(let i = 0; i < matrix.length; i++) {
@@ -204,18 +167,15 @@ function rebootingMatrix() {// Перезагружает изображение
             clusters[i].classList.add('value_cluster');            
             clusters[i].innerHTML = matrix[i]; 
         } else if(Array.isArray(matrix[i])) {
-            addingValueElements(matrix[i], listElements[i]);
+            clusters[i].classList.remove('value_cluster');
+            clusters[i].textContent = '';
+            addingValueElements(matrix[i], clusters[i]);
         } else {
             alert("какая то ошибка");
         }
     }
 }
 
-function deleteElementValues() {// Удаляет значение элементов
-    elements.forEach(item => {
-        item.textContent = '';
-    });
-}
 //----------------- end Creat elemets------------------------------------ 
 
 //-------------------Task declaration------------------------------------
@@ -254,55 +214,27 @@ function pourClusterBg(i) {// Курсор на поле
     clusters[i].classList.add('clusterBg'); 
 }   
 
-function showCluster(k) {// Вставляет цифры в кластеры/////////////////////////////////////////////////////
-    aaaxxx();/////////////////////////////////////// 
+function showCluster(k) {// Вставляет цифры в кластеры
+    recordStepInMemory();
+    removingNonStandardValues(k); 
     matrix.splice(index, 1, k);
-    deleteElementValues();
     rebootingMatrix();    
 }
 
 function checkingError(k) {// Проверяет возможность установки цифры в кластер
     if(Array.isArray(matrix[index])) {
         if(matrix[index].includes(k)) {
-            removingNonStandardValues(k);
             showCluster(k);         
         } else {
             alert("Этого числа не может быть сдесь");
         }
-    } else if(typeof matrix[index] == 'number') {////////////////////////////////////////////////////////////
-        alert('Если ошиблись, нажмите шаг назад "0" или начните заново');
+    } else if(typeof matrix[index] == 'number') {
+        alert('Если ошиблись, нажмите шаг назад "0"');
     } else {
         alert("ошибка почему то");
     }
 }
 
-function cancelingLastAction() {// отменяем последнее действие
-    matrix = recordingMoves[0];
-    recordingMoves.shift();
-    rebootingMatrix();
-    console.log(matrix);
-}
-
-//----------------End Task declaration------------------------------------   
-
-//----------------Decision-------------------------------------------------
-
-// function removingNonStandardValues(k) {// Удаляет недопустимые элементы из матрицы
-//     let arr = [sectorsMatrix, rowsMatrix, colomnsMatrix];
-//     for(let b = 0; b < 3; b++) {
-//         for(let i = 0; i < arr[b].length; i++) {
-//             if(arr[b][i].includes(index)) {
-//                 for(let a = 0; a < arr[b][i].length; a++) {
-//                     if(Array.isArray(matrix[[arr[b][i][a]]])) {
-//                         if(matrix[arr[b][i][a]].includes(k)) {    
-//                             matrix[arr[b][i][a]].splice(matrix[arr[b][i][a]].indexOf(k), 1);
-//                         }
-//                     }
-//                 }
-//             }
-//         }
-//     }    
-// }
 function removingNonStandardValues(k) {// Удаляет недопустимые элементы из матрицы
     let arr = [sectorsMatrix, rowsMatrix, colomnsMatrix];
     arr.forEach(item => {
@@ -320,22 +252,28 @@ function removingNonStandardValues(k) {// Удаляет недопустимы�
     });    
 }
 
-
-function aaaxxx() {
-    let clon;
-    clon = [...matrix];
-    recordingMoves.unshift(clon);
+function cancelingLastAction() {// отменяем последнее действие
+    if(recordingMoves.length == 0) {
+        alert('вы в начальной точке сохранения');
+    } else {
+        matrix = recordingMoves[0];
+        recordingMoves.shift();
+        rebootingMatrix();
+    }
 }
 
+//----------------End Task declaration------------------------------------   
+
+//----------------Decision-------------------------------------------------
 
 START.addEventListener('click', () => {
     console.log('start');
     solvingProblem();
 });
 
+
 function solvingProblem() {
-    
-    
+
     console.log(recordingMoves);
 }
 
