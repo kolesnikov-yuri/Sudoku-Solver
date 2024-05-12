@@ -8,12 +8,16 @@ for(let i = 0; i < 81; i++) {
     matrix.push([1, 2, 3, 4, 5, 6, 7, 8, 9]);
 }
 
+// Продолжение цикла решения задачи
+let startCycle = false;
+
 // Запись ходов
 const recordingMoves = [];
 
 function recordStepInMemory() {// Записать шаг в память
     let clon;
-    clon = JSON.parse(JSON.stringify(matrix));
+    clon = structuredClone(matrix);
+    // clon = JSON.parse(JSON.stringify(matrix));
     recordingMoves.unshift(clon);
 }
 
@@ -60,6 +64,8 @@ for(let a = 0; a < 3; a++) {
     ccc += 1;
     ddd = 0;
 }
+
+const arrObjectsMatrix = [sectorsMatrix, rowsMatrix, colomnsMatrix];
 
 function createsAnArrayGroup(item, e) {// Создает группу массивов
     for(let i = 0; i < e; i++) {
@@ -218,7 +224,8 @@ function showCluster(k) {// Вставляет цифры в кластеры
     recordStepInMemory();
     removingNonStandardValues(k); 
     matrix.splice(index, 1, k);
-    rebootingMatrix();    
+    rebootingMatrix();
+    if(startCycle == true) {solvingTask();}    
 }
 
 function checkingError(k) {// Проверяет возможность установки цифры в кластер
@@ -236,8 +243,7 @@ function checkingError(k) {// Проверяет возможность уста
 }
 
 function removingNonStandardValues(k) {// Удаляет недопустимые элементы из матрицы
-    let arr = [sectorsMatrix, rowsMatrix, colomnsMatrix];
-    arr.forEach(item => {
+    arrObjectsMatrix.forEach(item => {
         item.forEach(elem => {
             if(elem.includes(index)) {
                 elem.forEach(e => {
@@ -266,15 +272,97 @@ function cancelingLastAction() {// отменяем последнее дейс�
 
 //----------------Decision-------------------------------------------------
 
+let cycleCounter = 0;
+
 START.addEventListener('click', () => {
     console.log('start');
-    solvingProblem();
+    startCycle = true;
+    solvingTask();
 });
 
+function solvingTask() {
+    console.log("Счет цикла:  ", cycleCounter);
+    cycleCounter += 1;
+    checkingForReadiness();
+}
 
-function solvingProblem() {
+function checkingForReadiness() {// Проверям на готовность
+    for(let i = 0; i < 81; i++) {
+        if(Array.isArray(matrix[i])) {
+            searchingSingularNumberInCluster();
+            break;
+        } else if(i == 80) {
+            console.log("ГОТОВО");
+            break;
+        }
+    }
+}
 
-    console.log(recordingMoves);
+function searchingSingularNumberInCluster() {// Поиск единственного числа в класторе
+    for(let i = 0; i < 81; i++) {
+        if(matrix[i].length == 0) {
+            console.log("Ошибка! Поиск единственного числа в класторе. Такая комбинация матрицы невозможна.");
+            break;
+        } else if(matrix[i].length == 1) {
+            index = i;
+            checkingError(matrix[i][0]);
+            break;
+        } else if(matrix[i].length > 1 && i == 80) {
+            searchingSingularNumberInObject();
+        }
+    }
+}
+
+console.log("sectorsMatrix", sectorsMatrix);//////////////////////////////////////////////////
+
+
+//////////////////////Не работает///////////////////////////////
+
+function searchingSingularNumberInObject() {// Поиск единственного числа в объекте
+
+    let aaa;
+    let sss;
+
+    aaa = [];
+    sss = 0;
+    
+
+    for(let a = 0; a < 3; a++) {// перебирает типы
+
+        for(let b = 0; b < 9; b++) {// перебирает объекты
+
+            for(let c = 0; c < 9; c++) {// собирает массив объекта для проверки
+                aaa.push(matrix[arrObjectsMatrix[a][b][c]]);
+            }
+            
+            for(let k = 1; k < 10; k++) {// переберет все цифры -к-
+                if(aaa.includes(k)) {
+                    // console.log("есть такая цифра, прервать цикл");
+                    continue;
+                } else {
+                    for(let d = 0; d < 9; d++) { // посчитает во сколько  -к- в массивах
+                        if(Array.isArray(aaa[d])) {
+                            if(aaa[d].includes(k)) {
+                                sss += 1;
+                            }
+                        }
+                    }
+                }
+                console.log("sss", sss);
+                if(sss == 1) {
+                    sss = 0;
+                    for(let e = 0; e < 9; e++) {// это завершит, вставит цифру в случае удачного поиска
+                        if(aaa[e].includes(k)) {
+                            index = arrObjectsMatrix[a][b][e];
+                            checkingError(k);
+                        }
+                    }
+                }
+                sss = 0;
+            }
+            aaa = [];
+        }
+    }    
 }
 
 
