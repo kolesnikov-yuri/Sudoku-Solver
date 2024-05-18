@@ -308,7 +308,8 @@ function searchingSingularNumberInCluster() {// Поиск единственн�
             checkingError(matrix[i][0]);
             break;
         } else if(matrix[i].length > 1 && i == 80) {
-            searchingSingularNumberInObject();
+            // searchingSingularNumberInObject();
+            aaa();
         }
     }
 }
@@ -318,57 +319,120 @@ console.log("sectorsMatrix", sectorsMatrix);////////////////////////////////////
 
 //////////////////////Не работает///////////////////////////////
 
-function searchingSingularNumberInObject() {// Поиск единственного числа в объекте
+// function searchingSingularNumberInObject() {// Поиск единственного числа в объекте
 
-    let aaa;
-    let sss;
+//     let aaa;
+//     let sss;
+//     let key;
 
-    aaa = [];
-    sss = 0;
+//     aaa = [];
+//     sss = 0;
     
 
-    for(let a = 0; a < 3; a++) {// перебирает типы
+//     for(let a = 0; a < 3; a++) {// перебирает типы
 
-        for(let b = 0; b < 9; b++) {// перебирает объекты
+//         for(let b = 0; b < 9; b++) {// перебирает объекты
 
-            for(let c = 0; c < 9; c++) {// собирает массив объекта для проверки
-                aaa.push(matrix[arrObjectsMatrix[a][b][c]]);
-            }
+//             for(let c = 0; c < 9; c++) {// собирает массив объекта для проверки
+//                 aaa.push(matrix[arrObjectsMatrix[a][b][c]]);
+//             }
             
-            for(let k = 1; k < 10; k++) {// переберет все цифры -к-
-                if(aaa.includes(k)) {
-                    // console.log("есть такая цифра, прервать цикл");
-                    continue;
-                } else {
-                    for(let d = 0; d < 9; d++) { // посчитает во сколько  -к- в массивах
-                        if(Array.isArray(aaa[d])) {
-                            if(aaa[d].includes(k)) {
-                                sss += 1;
-                            }
-                        }
-                    }
-                }
-                console.log("sss", sss);
-                if(sss == 1) {
-                    sss = 0;
-                    for(let e = 0; e < 9; e++) {// это завершит, вставит цифру в случае удачного поиска
-                        if(aaa[e].includes(k)) {
-                            index = arrObjectsMatrix[a][b][e];
-                            checkingError(k);
-                        }
-                    }
-                }
-                sss = 0;
-            }
-            aaa = [];
+//             for(key = 1; key < 10; key++) {// переберет все цифры -кey-
+//                 if(aaa.includes(key)) {
+//                     // console.log("есть такая цифра, прервать цикл");
+//                     continue;
+//                 } else {
+//                     for(let d = 0; d < 9; d++) { // посчитает во сколько  -к- в массивах
+//                         if(Array.isArray(aaa[d])) {
+//                             if(aaa[d].includes(key)) {
+//                                 sss += 1;
+//                             }
+//                         }
+//                     }
+//                 }
+//                 console.log("sss", sss);
+//                 if(sss == 1) {
+//                     sss = 0;
+//                     for(let e = 0; e < 9; e++) {// это завершит, вставит цифру в случае удачного поиска
+//                         if(Array.isArray(aaa[e])) {
+//                             if(aaa[e].includes(key)) {
+//                                 index = arrObjectsMatrix[a][b][e];
+//                                 checkingError(key);
+//                             }   
+//                         }
+//                     }
+//                 } else if(sss == 0) {
+//                     console.log(`непонятно, ошибка , цифра ${key} отсутствует`);
+//                 } else if(sss > 1 && sss < 9) {
+//                     console.log('норма');
+//                 } else {
+//                     console.log('вообще не понятно');
+//                 }
+//                 sss = 0;
+//             }
+//             aaa = [];
+//         }
+//     }    
+// }
+//-------------------------------
+let arrayBeingChecked;                              // Проверяемый массив
+
+function aaa() {
+    for(let i = 0; i < 3; i++) {
+        for(let a = 0; a < 9; a++) {
+            arrayBeingChecked = arrObjectsMatrix[i][a];
+            findsSingularNumberInObject();
         }
-    }    
+    }
 }
+
+function findsSingularNumberInObject(){                 // находит единственное число в объекте
+    for(let key = 1; key < 10; key++) {
+        let counter = 0;                               // Счетчик совпадений
+        if(arrayBeingChecked.includes(key)) {
+            continue;
+        } else {
+            for(let i = 0; i < 9; i++) {
+                if(Array.isArray(arrayBeingChecked[i])) {
+                    if(arrayBeingChecked[i].includes(key)) {
+                        counter++;
+                    }
+                }
+            }
+        }
+        if(counter === 0) {
+            console.log(`Fn findsSingularNumberInObject. Ошибка. Отсутствует искомое число ${key} в класторах ${arrayBeingChecked}`);
+        }  else if(counter > 1 && counter < 9) {
+            continue;
+        } else if(counter > 8) {
+            console.log(`Fn findsSingularNumberInObject. Ошибка. Невозможное количество совпадений в класторах ${arrayBeingChecked}`);
+        } else if(counter === 1) {
+            for(let i = 0; i < 9; i++) {                     // это завершит и вставит цифру в случае удачного поиска
+                lookingRightArray(key, checkingError);
+                if(Array.isArray(arrayBeingChecked[i])) {
+                    if(arrayBeingChecked[i].includes(key)) {
+                        index = arrayBeingChecked[i];
+                        checkingError(key);
+                        break;
+                    }   
+                }
+            }
+        } else {
+            console.log('Fn findsSingularNumberInObject. Ошибка. Совсем что то непонятное');
+        }
+    }  
+}
+
+
+
+
+
+
+console.log(`Цикл проверок закончен. Проведенно циклов: ${cycleCounter}`);
 
 
 //----------------End decision-------------------------------------------------
 
  });
-
 
 
